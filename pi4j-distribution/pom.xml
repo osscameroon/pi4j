@@ -334,7 +334,7 @@
                         <phase>initialize</phase>
                         <configuration>
                             <target>
-                                <mkdir dir="${project.build.directory}/distro-contents/bin" />
+                                <mkdir dir="${project.build.directory}/distro-contents/bin"/>
                             </target>
                         </configuration>
                         <goals>
@@ -348,7 +348,9 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <target>
-                                <fixcrlf srcdir="${project.build.directory}/distro-contents" eol="unix" excludes="**/*.jar" />
+                                <fixcrlf srcdir="${project.build.directory}/distro-contents"
+                                         eol="unix"
+                                         excludes="**/*.jar"/>
                             </target>
                         </configuration>
                         <goals>
@@ -366,15 +368,22 @@
                         </goals>
                         <configuration>
                             <target>
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath"/>
                                 <if>
-                                    <equals arg1="${pi4j.dev.transfer}" arg2="true" />
+                                    <equals arg1="${pi4j.dev.transfer}" arg2="true"/>
                                     <then>
                                         <!-- ensure the target directory exists on the Raspberry Pi -->
-                                        <sshexec host="${pi4j.dev.host}" port="${pi4j.dev.port}" username="${pi4j.dev.user}" password="${pi4j.dev.password}" trust="true" failonerror="false" verbose="true" command="mkdir --parents ${pi4j.dev.directory}" />
+                                        <sshexec host="${pi4j.dev.host}" port="${pi4j.dev.port}"
+                                                 username="${pi4j.dev.user}"
+                                                 password="${pi4j.dev.password}" trust="true" failonerror="false"
+                                                 verbose="true" command="mkdir --parents ${pi4j.dev.directory}"/>
 
                                         <!-- copy the DEB file to the Raspberry Pi -->
-                                        <scp file="${project.build.directory}/pi4j-${project.version}.deb" remoteTofile="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}/pi4j.deb" port="${pi4j.dev.port}" trust="true" verbose="true" failonerror="true">
+                                        <scp
+                                            file="${project.build.directory}/pi4j-${project.version}.deb"
+                                            remoteTofile="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}/pi4j.deb"
+                                            port="${pi4j.dev.port}" trust="true" verbose="true" failonerror="true">
                                         </scp>
                                     </then>
                                 </if>

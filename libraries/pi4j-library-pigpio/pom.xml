@@ -101,15 +101,21 @@
                         </goals>
                         <configuration>
                             <target>
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath"/>
                                 <if>
-                                    <equals arg1="${pi4j.dev.transfer}" arg2="true" />
+                                    <equals arg1="${pi4j.dev.transfer}" arg2="true"/>
                                     <then>
                                         <!-- ensure the target directory exists on the Raspberry Pi via SSH -->
-                                        <sshexec host="${pi4j.dev.host}" port="${pi4j.dev.port}" username="${pi4j.dev.user}" password="${pi4j.dev.password}" trust="true" failonerror="false" verbose="false" command="mkdir --parents ${pi4j.dev.directory}" />
+                                        <sshexec host="${pi4j.dev.host}" port="${pi4j.dev.port}"
+                                                 username="${pi4j.dev.user}"
+                                                 password="${pi4j.dev.password}" trust="true" failonerror="false"
+                                                 verbose="false" command="mkdir --parents ${pi4j.dev.directory}"/>
 
                                         <!-- copy the JAR file to the Raspberry Pi vs SCP -->
-                                        <scp file="${project.build.directory}/${project.build.finalName}.jar" todir="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}" port="${pi4j.dev.port}" trust="true" verbose="false" failonerror="true">
+                                        <scp file="${project.build.directory}/${project.build.finalName}.jar"
+                                             todir="${pi4j.dev.user}:${pi4j.dev.password}@${pi4j.dev.host}:${pi4j.dev.directory}"
+                                             port="${pi4j.dev.port}" trust="true" verbose="false" failonerror="true">
                                         </scp>
                                     </then>
                                 </if>
@@ -127,11 +133,14 @@
                         </goals>
                         <configuration>
                             <target name="pi4j-attach-native-library">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath"/>
                                 <!-- attach 32-bit (ARMHF) Pi4J PIGPIO JNI Library  -->
-                                <attachartifact file="${project.build.directory}/lib/armhf/libpi4j-pigpio.so" classifier="armhf" type="so" />
+                                <attachartifact file="${project.build.directory}/lib/armhf/libpi4j-pigpio.so"
+                                                classifier="armhf" type="so"/>
                                 <!-- attach 64-bit (AARCH64) Pi4J PIGPIO JNI Library  -->
-                                <attachartifact file="${project.build.directory}/lib/aarch64/libpi4j-pigpio.so" classifier="aarch64" type="so" />
+                                <attachartifact file="${project.build.directory}/lib/aarch64/libpi4j-pigpio.so"
+                                                classifier="aarch64" type="so"/>
                             </target>
                         </configuration>
                     </execution>
@@ -253,14 +262,14 @@
                                 <phase>generate-resources</phase>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/build" />
-                                        <mkdir dir="target/build/native" />
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/build"/>
+                                        <mkdir dir="target/build/native"/>
                                         <copy todir="target/build/native">
-                                            <fileset dir="src/main/native" />
+                                            <fileset dir="src/main/native"/>
                                         </copy>
-                                        <chmod dir="target/build/native" perm="ugo+rx" includes="*.sh" />
+                                        <chmod dir="target/build/native" perm="ugo+rx" includes="*.sh"/>
                                     </target>
                                 </configuration>
                                 <goals>
@@ -280,38 +289,47 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                                 classpathref="maven.plugin.classpath"/>
                                         <if>
                                             <!-- check for DOCKER-COMPILER setting in the 'pi4j.native.compiler' property -->
-                                            <equals arg1="${pi4j.native.compiler.effective}" arg2="DOCKER-COMPILER" />
+                                            <equals arg1="${pi4j.native.compiler.effective}" arg2="DOCKER-COMPILER"/>
                                             <then>
                                                 <!-- perform native build using Pi4J Docker Builder Image for native cross-compiling -->
-                                                <exec dir="${project.build.directory}/build/native" executable="/bin/bash" failonerror="true">
-                                                    <arg value="build-docker.sh" />
+                                                <exec dir="${project.build.directory}/build/native"
+                                                      executable="/bin/bash" failonerror="true">
+                                                    <arg value="build-docker.sh"/>
                                                 </exec>
                                             </then>
                                             <else>
                                                 <if>
                                                     <!-- check for CROSS-COMPILER setting in the 'pi4j.native.compiler' property -->
-                                                    <equals arg1="${pi4j.native.compiler.effective}" arg2="CROSS-COMPILER" />
+                                                    <equals arg1="${pi4j.native.compiler.effective}"
+                                                            arg2="CROSS-COMPILER"/>
                                                     <then>
                                                         <!-- perform native build using cross-compiler toolchains directly on host -->
-                                                        <exec dir="${project.build.directory}/build/native" executable="/bin/bash" failonerror="true">
-                                                            <arg value="build.sh" />
+                                                        <exec dir="${project.build.directory}/build/native"
+                                                              executable="/bin/bash" failonerror="true">
+                                                            <arg value="build.sh"/>
                                                         </exec>
                                                     </then>
                                                     <else>
-                                                        <fail message="NATIVE BUILD FAILED/ABORTED; Missing or invalid 'pi4j.native.compiler' property. [${pi4j.native.compiler}]; Expected 'CROSS-COMPILER|DOCKER-COMPILER'" />
+                                                        <fail
+                                                            message="NATIVE BUILD FAILED/ABORTED; Missing or invalid 'pi4j.native.compiler' property. [${pi4j.native.compiler}]; Expected 'CROSS-COMPILER|DOCKER-COMPILER'"/>
                                                     </else>
                                                 </if>
                                             </else>
                                         </if>
 
                                         <!-- copy compiled 32-bit (ARMHF) Pi4J PIGPIO JNI Library  -->
-                                        <copy failonerror="true" includeEmptyDirs="false" file="${project.build.directory}/build/native/lib/armhf/libpi4j-pigpio.so" todir="${project.build.directory}/lib/armhf" />
+                                        <copy failonerror="true" includeEmptyDirs="false"
+                                              file="${project.build.directory}/build/native/lib/armhf/libpi4j-pigpio.so"
+                                              todir="${project.build.directory}/lib/armhf"/>
 
                                         <!-- copy compiled 64-bit (AARCH64) Pi4J PIGPIO JNI Library  -->
-                                        <copy failonerror="true" includeEmptyDirs="false" file="${project.build.directory}/build/native/lib/aarch64/libpi4j-pigpio.so" todir="${project.build.directory}/lib/aarch64" />
+                                        <copy failonerror="true" includeEmptyDirs="false"
+                                              file="${project.build.directory}/build/native/lib/aarch64/libpi4j-pigpio.so"
+                                              todir="${project.build.directory}/lib/aarch64"/>
                                     </target>
                                 </configuration>
                             </execution>
